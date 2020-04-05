@@ -6,7 +6,7 @@ arr1 = np.array([3,10,8,7,34,11,28,72])
 arr2 = np.array(((8.5,6,4.1,2,0.7),(1.5,3,5.4,7.3,9),(3.2,3,3.8,3,3),(11.2,13.4,15.6,17.8,19)))
 print('一维数组：\n',arr1)
 print('二维数组：\n',arr2)
-#test
+#-------矩阵的元素获取-------------
 # 一维数组元素的获取
 print(arr1[[2,3,5,7]])
 # 二维数组元素的获取
@@ -16,19 +16,22 @@ print(arr2[1,2])
 print(arr2[2,:])
 # 第2列所有元素
 print(arr2[:,1])
-# 第2至4行，2至5行
+# 第2至4行，2至5列
 print(arr2[1:4,1:5])
+
+#下面这两个方法不行因为直接用np的索引必须是连续的取元素，所以想不连续的取就要用ix函数
 # 第一行、最后一行和第二列、第四列构成的数组
 print(arr2[[0,-1],[1,3]])
 # 第一行、最后一行和第一列、第三列、第四列构成的数组
 print(arr2[[0,-1],[1,2,3]])
+
 # 第一行、最后一行和第二列、第四列构成的数组
 print(arr2[np.ix_([0,-1],[1,3])])
 # 第一行、最后一行和第一列、第三列、第四列构成的数组
 print(arr2[np.ix_([0,-1],[1,2,3])])
 
 
-# 读入数据
+# 读入数据，可以读csv和txt，有很多可选参数详细用到再查
 stu_score = np.genfromtxt(fname = r'C:\Users\Administrator\Desktop\stu_socre.txt',delimiter='\t',skip_header=1)
 # 查看数据结构
 print(type(stu_score))
@@ -55,7 +58,7 @@ print(arr3.resize(2,9))
 # 打印数组arr3的行列数
 print(arr3.shape)
 
-
+#将矩阵降维成一维的向量
 arr4 = np.array([[1,10,100],[2,20,200],[3,30,300]])
 print('原数组：\n',arr4)
 # 默认排序降维
@@ -68,7 +71,7 @@ print(arr4.flatten(order = 'F'))
 print(arr4.reshape(-1, order = 'F'))
 
 
-# 更改预览值
+# 更改预览值 flatten不会改变原数组，ravel和reshape会改变
 arr4.flatten()[0] = 2000
 print('flatten方法：\n',arr4)
 arr4.ravel()[1] = 1000
@@ -76,7 +79,7 @@ print('ravel方法：\n',arr4)
 arr4.reshape(-1)[2] = 3000
 print('reshape方法：\n',arr4)
 
-
+#矩阵横向或者纵向的合并
 arr5 = np.array([1,2,3])
 print('vstack纵向合并数组：\n',np.vstack([arr4,arr5]))
 print('row_stack纵向合并数组：\n',np.row_stack([arr4,arr5]))
@@ -97,7 +100,7 @@ tot_fun = np.add(np.add(math,english),chinese)
 print('符号加法：\n',tot_symbol)
 print('函数加法：\n',tot_fun)
 
-# 除法运算
+# 除法运算，这里的除法就是每个对应的元素相除，不是矩阵的除法
 height = np.array([165,177,158,169,173])
 weight = np.array([62,73,59,72,80])
 BMI_symbol = weight/(height/100)**2
@@ -126,13 +129,13 @@ print('满足条件的二维数组元素获取：\n',arr7[arr7>arr8])
 arr9 = np.array([3,10,23,7,16,9,17,22,4,8,15])
 print('满足条件的一维数组元素获取：\n',arr9[arr9>10])
 
-# 判断操作
+# 判断操作 np.where的作用就和excel里的if函数一样
 # 将arr7中大于7的元素改成5，其余的不变
 print('二维数组的条件操作：\n',np.where(arr7>7,5,arr7))
 # 将arr9中大于10 的元素改为1，否则改为0
 print('一维数组的条件操作：\n',np.where(arr9>10,1,0))
 
-
+#-----------广播运算---------用到的时候再看
 # 各输入数组维度一致，对应维度值相等
 arr10 = np.arange(12).reshape(3,4)
 arr11 = np.arange(101,113).reshape(3,4)
@@ -144,13 +147,14 @@ print('维数不一致，但末尾的维度值一致：\n',arr12 + arr10)
 # 各输入数组维度不一致，对应维度值不相等，但其中有一个为1
 arr12 = np.arange(60).reshape(5,4,3)
 arr13 = np.arange(4).reshape(4,1)
+print('arr12 \n',arr12,'\n arr13',arr13)
 print('维数不一致，维度值也不一致，但维度值至少一个为1：\n',arr12 + arr13)
 # 加1补齐
 arr14 = np.array([5,15,25])
 print('arr14的维度自动补齐为(1,3)：\n',arr10 + arr14)
 
 
-# 一维数组的点积
+# 一维数组的点积，一维数组乘的时候不用转置，直接是对应元素相乘后相加
 vector_dot = np.dot(np.array([1,2,3]), np.array([4,5,6]))
 print('一维数组的点积：\n',vector_dot)
 # 二维数组的乘法
@@ -161,26 +165,33 @@ arr2d = np.dot(arr10,arr11)
 print('二维数组的乘法：\n',arr2d)
 # diag的使用
 arr15 = np.arange(16).reshape(4,-1)
+## 为什么上面可以用-1? arr15 = np.arange(16).reshape(4,4)
 print('4×4的矩阵：\n',arr15)
 print('取出矩阵的主对角线元素：\n',np.diag(arr15))
 print('由一维数组构造的方阵：\n',np.diag(np.array([5,15,25])))
-# 计算方阵的特征向量和特征根
+# 计算方阵的特征向量和特征根，eig输出的元祖里第一个是特征根，第二个是对应的特征向量
 arr16 = np.array([[1,2,5],[3,6,8],[4,7,9]])
 print('计算3×3方阵的特征根和特征向量：\n',arr16)
 print('求解结果为：\n',np.linalg.eig(arr16))
+
+#---------------多元线性回归模型-----------------
 # 计算偏回归系数
 X = np.array([[1,1,4,3],[1,2,7,6],[1,2,6,6],[1,3,8,7],[1,2,5,8],[1,3,7,5],[1,6,10,12],[1,5,7,7],[1,6,3,4],[1,5,7,8]])
 Y = np.array([3.2,3.8,3.7,4.3,4.4,5.2,6.7,4.8,4.2,5.1])
-
+# Y=X*Beta+epsilion的解，即便回归系数beta=(X'X)^(-1)X'Y
 X_trans_X_inverse = np.linalg.inv(np.dot(np.transpose(X),X))
 beta = np.dot(np.dot(X_trans_X_inverse,np.transpose(X)),Y)
 print('偏回归系数为：\n',beta)
+
 # 多元线性方程组
 A = np.array([[3,2,1],[2,3,1],[1,2,3]])
-b = np.array([39,34,26])
+#b = np.array([39,34,26]) b用这个最后解就是1*3的矩阵
+#用下面的这种最后输出的就是3*1的矩阵
+b = np.array([[39],[34],[26]])
 X = np.linalg.solve(A,b)
 print('三元一次方程组的解：\n',X)
-# 范数的计算
+
+#-------------范数的计算------------啥是范数？用到时候再看
 arr17 = np.array([1,3,5,7,9,10,-12])
 # 一范数
 res1 = np.linalg.norm(arr17, ord = 1)
@@ -192,7 +203,7 @@ print('向量的二范数：\n',res2)
 res3 = np.linalg.norm(arr17, ord = np.inf)
 print('向量的无穷范数：\n',res3)
 
-
+#-------------伪随机数生成-----------------
 import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy import stats
